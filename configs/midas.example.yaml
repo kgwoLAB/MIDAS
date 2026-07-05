@@ -1,0 +1,58 @@
+# Example MIDAS configuration. Do not store credentials here.
+
+sampling:
+  interval_ms: 100
+  window_seconds: 10
+  classifier_timesteps: 100
+
+detector:
+  alpha: 0.3
+  k: 0.0
+  tau_qp: 1000
+  tau_cont: 10
+  hot_alert_level: 2
+
+classifier:
+  input_features:
+    - rate_log
+    - ewma_log
+    - cusum_log
+    - op_norm
+    - len_log
+    - delta_psn_log
+    - rx_data_log
+    - tx_data_log
+    - pause_log
+    - pause_dur_log
+    - cache_hit_log
+  classes:
+    0: Benign
+    1: QueueFlooding
+    2: CacheDepletion
+    3: VerbsFlooding
+    4: VerbsAmplification
+  hidden_dim: 16
+  model: lstm_gru_hybrid
+
+deployment:
+  server_side:
+    host: server.example.org
+    port: 22
+    user: midas
+    role: bluefield_server_midas
+  client_side:
+    host: client.example.org
+    port: 22
+    user: midas
+    role: rdma_client_workload
+
+policy:
+  default_action: rate_limit
+  queue_flooding:
+    action: queue_depth_limit
+  cache_depletion:
+    action: address_diversity_limit
+  verbs_flooding:
+    action: token_bucket
+  verbs_amplification:
+    action: token_bucket

@@ -1,0 +1,28 @@
+# MIDAS mitigation policy map.
+
+defaults:
+  dry_run: true
+  fallback_backend: tc
+  dpa_backend: doca
+
+classes:
+  0:
+    name: Benign
+    action: allow
+    scope: none
+  1:
+    name: QueueFlooding
+    action: queue_depth_limit_or_qp_reallocation
+    scope: qp
+  2:
+    name: CacheDepletion
+    action: address_diversity_limit
+    scope: dip
+  3:
+    name: VerbsFlooding
+    action: token_bucket_or_wqe_pacing
+    scope: qp
+  4:
+    name: VerbsAmplification
+    action: token_bucket_or_wqe_pacing
+    scope: qp
